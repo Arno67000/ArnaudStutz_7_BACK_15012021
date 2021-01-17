@@ -1,12 +1,9 @@
-import * as express from 'express';
-import {Application, Response, Request} from 'express';
+import * as http from 'http';
+import { app } from './app';
+require('dotenv').config();
 
-const app: Application = express();
+app.set('PORT', process.env.APP_PORT);
 
-app.get('/test', (req: Request, res: Response) => {
-    res.send('Hello TS')
-});
+const server = http.createServer(app);
 
-app.listen(3000, () => {
-    console.log('Express Server running on port: 3000')
-})
+server.listen(process.env.APP_PORT);
