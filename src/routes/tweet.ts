@@ -1,11 +1,10 @@
 import * as express from 'express';
-import { auth, tweetAuth } from '../middleware/auth';
-import { deleteTweet, getAllTweets, postTweet } from '../controllers/tweet';
+import { auth } from '../middleware/auth';
+import { deleteTweet, getAllTweets, modifyTweet, postTweet } from '../controllers/tweet';
 
 export const tweetRouter = express.Router();
 
-tweetRouter.get('/', getAllTweets);
-
+tweetRouter.get('/', auth, getAllTweets);
 tweetRouter.post('/', auth, postTweet);
-
-tweetRouter.delete('/:id', tweetAuth, deleteTweet);
+tweetRouter.delete('/:tweetId', auth, deleteTweet);
+tweetRouter.put('/:tweetId', auth, modifyTweet);

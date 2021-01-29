@@ -18,6 +18,9 @@ export class User {
     @Column()
     password: string;
 
+    @Column()
+    role: string;
+
     @OneToMany((type) => Tweet, (tweet) => tweet.user)
     tweets: Tweet[];
 };
