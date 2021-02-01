@@ -74,7 +74,7 @@ export async function deleteUser(req: Request, res:Response, next: NextFunction)
                 .then(() => res.status(200).json({message: 'Profil supprimé!!'}))
                 .catch(err => res.status(500).json({message: err}));
         } else {
-            return res.status(404).json({ error: 'Aucun utilisateur trouvé '});
+            return res.status(404).json({ error: 'Aucun utilisateur trouvé avec cet identifiant !!'});
         };
     } else {
         return res.status(403).json({ error: 'Cette requête nécessite une authentification !!'});
@@ -87,7 +87,7 @@ export async function getCurrentUser(req:Request, res:Response, next: NextFuncti
         const repo = getRepository(User);
         await repo.findOne({id: req.body.allowedUser.id})
                 .then(user => res.status(200).json(user))
-                .catch(err => res.status(404).json({ message: `L'utilisateur n'existe pas !!${err}`}));
+                .catch(err => res.status(404).json({ message: `Aucun utilisateur trouvé avec cet identifiant :${err}`}));
     } else {
         return res.status(403).json({ error: 'Cette requête nécessite une authentification !!'});
     }
@@ -127,7 +127,7 @@ export async function modifyUsersPass(req:Request, res:Response, next: NextFunct
                 throw err;
             };
         } else {
-            return res.status(404).json({ message: 'Aucun utilisateur trouvé '});
+            return res.status(404).json({ message: 'Aucun utilisateur trouvé avec cet identifiant !!'});
         };
     } else {
         return res.status(403).json({ message: 'Cette requête nécessite une authentification !!'});
