@@ -21,6 +21,6 @@ export class User {
     @Column()
     role: string;
 
-    @OneToMany((type) => Tweet, (tweet) => tweet.user)
+    @OneToMany((type) => Tweet, (tweet) => tweet.user, {onDelete:'CASCADE'})
     tweets: Tweet[];
 };

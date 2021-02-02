@@ -12,6 +12,6 @@ export class Tweet {
     @CreateDateColumn({ type: 'datetime'})
     date: Date;
 
-    @ManyToOne((type) => User, (user) => user.tweets)
+    @ManyToOne((type) => User, (user) => user.tweets, {onDelete:'CASCADE'})
     user: User;
 };

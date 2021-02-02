@@ -7,7 +7,7 @@ import * as jwebtkn from 'jsonwebtoken';
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
     const repo = getRepository(User);
-    const checkingPseudo = await repo.findOne({pseudo: req.body.pseudo}) || undefined;
+    const checkingPseudo = await repo.findOne({pseudo: req.body.pseudo.replace(/[\$\=\*\&\%]*/gm,'')}) || undefined;
     if(checkingPseudo) {
         return res.status(403).json({ message: 'Pseudo déjà utilisé'});
     }
@@ -16,7 +16,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
             const user = new User();
             user.firstName =  Buffer.from(req.body.firstName, 'binary').toString('base64');
             user.lastName = Buffer.from(req.body.lastName, 'binary').toString('base64');
-            user.pseudo = req.body.pseudo;
+            user.pseudo = req.body.pseudo.replace(/[\$\=\*\&\%]*/gm,'');
             user.password = hash;
             if(user.pseudo === "admin") {
                 user.role = "Moderateur";
@@ -31,15 +31,15 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
 export async function login(req: Request, res: Response, next: NextFunction) {
     const repo = getRepository(User);
-    const user = await repo.findOne({pseudo: req.body.pseudo});
+    const user = await repo.findOne({pseudo: req.body.pseudo.replace(/[\$\=\*\&\%]*/gm,'')});
     if(user) {
         bcrypt.compare(req.body.password, user.password)
         .then(valid => {
             if (valid) {
                 return res.status(200).json({
                     pseudo: user.pseudo,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
+                    firstName: Buffer.from(user.firstName, "base64").toString('utf-8'),
+                    lastName: Buffer.from(user.lastName, "base64").toString('utf-8'),
                     role: user.role,
                     id: user.id,
                     token: jwebtkn.sign(
@@ -86,7 +86,13 @@ export async function getCurrentUser(req:Request, res:Response, next: NextFuncti
     if (req.body.allowedUser) {
         const repo = getRepository(User);
         await repo.findOne({id: req.body.allowedUser.id})
-                .then(user => res.status(200).json(user))
+                .then(user => res.status(200).json({
+                    pseudo: user.pseudo,
+                    firstName: Buffer.from(user.firstName, "base64").toString('utf-8'),
+                    lastName: Buffer.from(user.lastName, "base64").toString('utf-8'),
+                    role: user.role,
+                    id: user.id
+                }))
                 .catch(err => res.status(404).json({ message: `Aucun utilisateur trouvé avec cet identifiant :${err}`}));
     } else {
         return res.status(403).json({ error: 'Cette requête nécessite une authentification !!'});
@@ -101,7 +107,7 @@ export async function modifyUsersPass(req:Request, res:Response, next: NextFunct
         if (user) {
 
             try {
-                await bcrypt.compare(req.body.currentPass, user.password)
+                await bcrypt.compare(req.body.oldPass, user.password)
                     .then(valid => {
                         if(valid) {
                             return true;
@@ -111,7 +117,7 @@ export async function modifyUsersPass(req:Request, res:Response, next: NextFunct
                     })
                     .catch(err => res.status(500).json({ 'Error': err }));
                 
-                bcrypt.hash(req.body.newPass,15)
+                bcrypt.hash(req.body.password,15)
                     .then((hash:string) => {
                         user.password = hash;
                         repo.save(user)

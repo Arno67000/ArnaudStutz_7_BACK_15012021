@@ -4,14 +4,17 @@ import * as bodyParser from 'body-parser';
 import * as dotenv from 'dotenv';
 dotenv.config();
 import * as helmet from 'helmet';
+import * as morgan from 'morgan';
 
 import { userRouter } from './routes/user';
 import { createConnection } from 'typeorm';
 import { tweetRouter } from './routes/tweet';
+import { LoggerStream } from './logger/winstonConfig';
 
 export const app: Application = express();
 
 app.use(helmet());
+app.use(morgan('combined', { stream: new LoggerStream() }));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');

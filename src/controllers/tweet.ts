@@ -21,7 +21,10 @@ export async function postTweet(req: Request, res: Response, next: NextFunction)
     if(req.body.user.id === req.body.allowedUser.id) {
         const repo = getRepository(Tweet);
         let tweet = new Tweet();
-        tweet = { ...req.body };
+        tweet = { 
+            ...req.body,
+            content: req.body.content.replace(/[\$\=\*]*/gm,'')
+         };
         console.log(tweet);
         await repo.save(tweet)
             .then(() => console.log('tweet saved !'))
@@ -75,7 +78,7 @@ export async function modifyTweet(req: Request, res: Response, next: NextFunctio
             where: {id: req.params.tweetId}
         })
             .then(tweet => {
-                tweet.content = req.body.content;
+                tweet.content = req.body.content.replace(/[\$\=\*]*/gm,'');
                 repo.save(tweet).then(() => res.status(200).json(tweet)).catch(err => res.status(500).json({ error: err}));
             })
             .catch(err => res.status(404).json({ message: 'Aucun tweet trouvé avec cet identifiant : ', err}));
@@ -94,7 +97,7 @@ export async function modifyTweet(req: Request, res: Response, next: NextFunctio
                     relations: ["user"],
                     where: {id: req.params.tweetId}
                 });
-                tweet.content = req.body.content;
+                tweet.content =  req.body.content.replace(/[\$\=\*]*/gm,'');
                 await repo.save(tweet)
                     .then(() => res.status(200).json(tweet))
                     .catch(error => {
