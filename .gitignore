@@ -1,4 +1,4 @@
 node_modules
 .env
 src/logger/**.log
-dist
+/dist
