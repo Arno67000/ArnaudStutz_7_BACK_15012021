@@ -1,4 +1,4 @@
-# Groupomania Back-end (Typescript)
+# GroupomaniaProject Back-end (Typescript)
 
 This API uses a MySQL Database with Typeorm. 
 
