@@ -3,7 +3,7 @@ import {check, validationResult} from 'express-validator';
 
 export function userValidationRules() {
     return [
-        check('pseudo').isString().trim().escape().isLength({ min:3, max:12}).withMessage("Le pseudo doit contenir entre 3 et 12 caractères, et aucun des caractères spéciaux" ),
+        check('pseudo').isString().trim().isLength({ min:3, max:12}).withMessage("Le pseudo doit contenir entre 3 et 12 caractères, et aucun des caractères spéciaux" ),
         check('password').isStrongPassword({
             minLength: 8,
             minLowercase: 1, 
@@ -23,7 +23,7 @@ export function userValidationRules() {
 
 export function inputValidationRules() {
     return [
-        check('content').isString().trim().escape().isLength({ min: 4, max: 250 }).withMessage("Le message peut contenir de 4 à 250 caractères.")
+        check('content').isString().trim().isLength({ min: 4, max: 250 }).withMessage("Le message peut contenir de 4 à 250 caractères.")
     ];
 };
 

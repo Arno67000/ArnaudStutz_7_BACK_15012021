@@ -3,6 +3,7 @@
         "sourceMap": true,
         "target": "ES6",
         "module": "CommonJS",
+        "outDir": "dist",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true
     },
