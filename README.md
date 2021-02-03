@@ -1,8 +1,8 @@
 # Groupomania Back-end (Typescript)
 
-This API uses a MySQL Database. 
+This API uses a MySQL Database with Typeorm. 
 
-Find the Front-end at: https://github.com/Arno67000/ArnaudStutz_7_FRONT_15012021
+Find the Front-end app at: https://github.com/Arno67000/ArnaudStutz_7_FRONT_15012021
 
 
 ## Installation (nodeJs required)
