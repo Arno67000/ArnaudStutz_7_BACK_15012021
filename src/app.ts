@@ -1,15 +1,17 @@
-import * as express from 'express';
+import express from 'express';
 import {Application, Response, Request, NextFunction} from 'express';
-import * as bodyParser from 'body-parser';
+//Logger
+import helmet from 'helmet';
+import morgan from 'morgan';
+import { LoggerStream } from './logger/winstonConfig';
+
+//Routers
+import { userRouter } from './routes/user';
+import { tweetRouter } from './routes/tweet';
+
+import { createConnection } from 'typeorm';
 import * as dotenv from 'dotenv';
 dotenv.config();
-import * as helmet from 'helmet';
-import * as morgan from 'morgan';
-
-import { userRouter } from './routes/user';
-import { createConnection } from 'typeorm';
-import { tweetRouter } from './routes/tweet';
-import { LoggerStream } from './logger/winstonConfig';
 
 export const app: Application = express();
 
@@ -25,12 +27,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 createConnection()
     .then(() => {
-        console.log('Connecté à la DATABASE : port '+process.env.TYPEORM_PORT);
+        console.log(`Connected to ${process.env.TYPEORM_DATABASE} DB on port: ${process.env.TYPEORM_PORT}`);
     })
     .catch(err => console.log('Error: DATABASE_CONNECTION FAILED =>'+err));
 
-app.use(bodyParser.json({ limit: "1kb" }));
-app.use(bodyParser.urlencoded({extended: false, limit: "1kb"}));
+app.use(express.json({ limit: "1kb" }));
+app.use(express.urlencoded({extended: false, limit: "1kb"}));
 
 app.use('/user', userRouter);
 app.use('/tweets', tweetRouter);

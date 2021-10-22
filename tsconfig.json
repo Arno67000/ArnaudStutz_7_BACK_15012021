@@ -4,11 +4,20 @@
         "target": "ES6",
         "module": "CommonJS",
         "outDir": "dist",
+        "esModuleInterop": true,
+        "strict": true,
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "baseUrl": "./",
+        "paths": {
+            "test/*": ["test/*"]
+        },
     },
     "include": [
         "src/**/*.ts"
+    ],
+    "exclude": [
+        "src/**/*.test.ts"
     ],
     "types": [
         "reflect-metadata"
