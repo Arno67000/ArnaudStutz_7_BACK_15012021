@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc --project ./",
     "dev": "nodemon src/server.ts",
-    "husky:setup":"husky install && npx husky add .husky/pre-commit \"yarn prettier:fix\" && npx husky add .husky/pre-commit \"yarn lint\" && npx husky add .husky/pre-push \"yarn test\" && npx husky add .husky/pre-push \"yarn build\"",
+    "husky:setup": "husky install && npx husky add .husky/pre-commit \"yarn prettier:fix\" && npx husky add .husky/pre-commit \"yarn lint\" && npx husky add .husky/pre-push \"yarn test\" && npx husky add .husky/pre-push \"yarn build\"",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --check **/*.{ts,json}",
@@ -29,7 +29,7 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.30",
+    "typeorm": "^0.2.38",
     "winston": "^3.3.3"
   },
   "devDependencies": {

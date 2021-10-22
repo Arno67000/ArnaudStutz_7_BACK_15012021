@@ -9,7 +9,7 @@
         "@typescript-eslint"
     ],
     "rules": {
-        // "@typescript-eslint/no-non-null-assertions": "off",
+        "@typescript-eslint/no-non-null-assertions": "off"
     },
     "overrides": [
         {

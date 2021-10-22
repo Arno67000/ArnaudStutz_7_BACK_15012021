@@ -38,9 +38,3 @@ app.use(express.urlencoded({ extended: false, limit: "1kb" }));
 
 app.use("/user", userRouter);
 app.use("/tweets", tweetRouter);
-
-// error handler
-app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
-    res.status(err.status || 500);
-    res.render("error");
-});
