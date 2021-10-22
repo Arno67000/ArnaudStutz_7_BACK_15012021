@@ -8,7 +8,7 @@ Find the Front-end app at: https://github.com/Arno67000/ArnaudStutz_7_FRONT_1501
 ## Installation (nodeJs required)
 
 Clone the repository.
-In the created directory, run `npm install`.
+In the created directory, run `yarn install`.
 
 ## Config
 
@@ -17,10 +17,10 @@ In the `.env` file, replace the `****` fields with the required informations (Da
 
 ## START (JavaScript mode)
 
-Run `npm run tsc` to transpile the typescript (.ts) files to javascript (.js) in a `dist/` directory.
-Run `npm start` to start the server and wait for the console to show : `Connecté à la DATABASE`.
+Run `yarn run tsc` to transpile the typescript (.ts) files to javascript (.js) in a `dist/` directory.
+Run `yarn start` to start the server and wait for the console to show : `Connecté à la DATABASE`.
 
 ## START in DEV mode (from typescript)
 
 In the `.env` file, change the TYPEORM_ENTITIES line to : `TYPEORM_ENTITIES= entity/*.js, src/entity/**/*.ts`. 
-Run `npm run dev` to start the server and wait for the console to show : `Connecté à la DATABASE`.
+Run `yarn run dev` to start the server and wait for the console to show : `Connecté à la DATABASE`.
