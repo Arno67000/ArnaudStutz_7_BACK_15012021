@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Tweet } from './Tweet';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Tweet } from "./Tweet";
 
-@Entity({ name: "users"})
+@Entity({ name: "users" })
 export class User {
     @PrimaryGeneratedColumn("uuid")
     id: string;
@@ -21,6 +21,6 @@ export class User {
     @Column()
     role: string;
 
-    @OneToMany((type) => Tweet, (tweet) => tweet.user, {onDelete:'CASCADE'})
+    @OneToMany((type) => Tweet, (tweet) => tweet.user, { onDelete: "CASCADE" })
     tweets: Tweet[];
-};
+}

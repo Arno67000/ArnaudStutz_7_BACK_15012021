@@ -11,15 +11,9 @@
         "baseUrl": "./",
         "paths": {
             "test/*": ["test/*"]
-        },
+        }
     },
-    "include": [
-        "src/**/*.ts"
-    ],
-    "exclude": [
-        "src/**/*.test.ts"
-    ],
-    "types": [
-        "reflect-metadata"
-    ]
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/**/*.test.ts"],
+    "types": ["reflect-metadata"]
 }

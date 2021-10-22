@@ -3,3 +3,4 @@ node_modules/
 src/logger/**.log
 dist/
 coverage/
+.husky/
