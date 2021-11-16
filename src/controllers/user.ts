@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import jwebtkn from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 export async function signup(req: Request, res: Response) {
     try {
@@ -48,18 +50,18 @@ export async function login(req: Request, res: Response) {
                             id: user.id,
                             role: user.role,
                         },
-                        "CRYPTAGEDUTOKEN2226080389",
+                        process.env.SECRET!,
                         { expiresIn: "24h" }
                     ),
                 });
             } else {
-                return res.status(403).json({ message: "Mot de passe invalide." });
+                res.status(403).json({ message: "Mot de passe invalide." });
             }
         } else {
-            return res.status(404).json({ message: "Pseudo non valide !!" });
+            res.status(404).json({ message: "Pseudo non valide !!" });
         }
     } catch (error) {
-        console.log(error);
+        res.status(500).json({ Error: error });
     }
 }
 
@@ -80,7 +82,7 @@ export async function deleteUser(req: Request, res: Response) {
             return res.status(403).json({ error: "Cette requête nécessite une authentification !!" });
         }
     } catch (error) {
-        console.log(error);
+        res.status(500).json({ Error: error });
     }
 }
 
@@ -105,48 +107,33 @@ export async function getCurrentUser(req: Request, res: Response) {
             return res.status(403).json({ error: "Cette requête nécessite une authentification !!" });
         }
     } catch (error) {
-        console.log(error);
+        res.status(500).json({ Error: error });
     }
 }
 
 export async function modifyUsersPass(req: Request, res: Response) {
-    //Comparaison de l'Id du token avec l'Id utilisateur de la requête
-    if (req.body.allowedUser && req.body.allowedUser.id === req.params.userId) {
-        const repo = getRepository(User);
-        const user = await repo.findOne({ id: req.params.userId });
-        if (user instanceof User) {
-            try {
-                await bcrypt
-                    .compare(req.body.oldPass, user.password) //Vérification du Mot-de-passe à changer
-                    .then((valid) => {
-                        if (valid) {
-                            return true;
-                        } else {
-                            return res.status(403).json({ message: "Mot de passe invalide." });
-                        }
-                    })
-                    .catch((err) => res.status(500).json({ Error: err }));
+    try {
+        //Comparaison de l'Id du token avec l'Id utilisateur de la requête
+        if (req.body.allowedUser && req.body.allowedUser.id === req.params.userId) {
+            const repo = getRepository(User);
+            const user = await repo.findOne({ id: req.params.userId });
+            if (user instanceof User) {
 
-                bcrypt
-                    .hash(req.body.password, 15) // Cryptage du nouveau mot de passe
-                    .then((hash: string) => {
-                        //mise à jour du mot-de-passe
-                        user.password = hash;
-                        repo.save(user)
-                            .then(() => res.status(200).json({ message: "Le mot de passe à bien été modifié !!" }))
-                            .catch((error) => {
-                                console.log(error);
-                                return res.status(500).json({ error });
-                            });
-                    })
-                    .catch((err) => res.status(500).json({ Error: err }));
-            } catch (err) {
-                console.log(err);
+                const valid = await bcrypt.compare(req.body.oldPass, user.password);
+                if (!valid) {
+                    res.status(403).json({ message: "Mot de passe invalide." });
+                }
+                user.password = await bcrypt.hash(req.body.password, 15);
+                await repo.save(user);
+                res.status(200).json({ message: "Le mot de passe à bien été modifié !!" });
+
+            } else {
+                res.status(404).json({ message: "Aucun utilisateur trouvé avec cet identifiant !!" });
             }
         } else {
-            return res.status(404).json({ message: "Aucun utilisateur trouvé avec cet identifiant !!" });
+            res.status(403).json({ message: "Cette requête nécessite une authentification !!" });
         }
-    } else {
-        return res.status(403).json({ message: "Cette requête nécessite une authentification !!" });
+    } catch (error) {
+        res.status(500).json({ Error: error });
     }
 }
