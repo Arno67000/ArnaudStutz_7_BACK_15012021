@@ -112,12 +112,13 @@ export async function getCurrentUser(req: Request, res: Response) {
 }
 
 export async function modifyUsersPass(req: Request, res: Response) {
-    //Comparaison de l'Id du token avec l'Id utilisateur de la requête
-    if (req.body.allowedUser && req.body.allowedUser.id === req.params.userId) {
-        const repo = getRepository(User);
-        const user = await repo.findOne({ id: req.params.userId });
-        if (user instanceof User) {
-            try {
+    try {
+        //Comparaison de l'Id du token avec l'Id utilisateur de la requête
+        if (req.body.allowedUser && req.body.allowedUser.id === req.params.userId) {
+            const repo = getRepository(User);
+            const user = await repo.findOne({ id: req.params.userId });
+            if (user instanceof User) {
+
                 const valid = await bcrypt.compare(req.body.oldPass, user.password);
                 if (!valid) {
                     res.status(403).json({ message: "Mot de passe invalide." });
@@ -125,13 +126,14 @@ export async function modifyUsersPass(req: Request, res: Response) {
                 user.password = await bcrypt.hash(req.body.password, 15);
                 await repo.save(user);
                 res.status(200).json({ message: "Le mot de passe à bien été modifié !!" });
-            } catch (err) {
-                console.log(err);
+
+            } else {
+                res.status(404).json({ message: "Aucun utilisateur trouvé avec cet identifiant !!" });
             }
         } else {
-            return res.status(404).json({ message: "Aucun utilisateur trouvé avec cet identifiant !!" });
+            res.status(403).json({ message: "Cette requête nécessite une authentification !!" });
         }
-    } else {
-        return res.status(403).json({ message: "Cette requête nécessite une authentification !!" });
+    } catch (error) {
+        res.status(500).json({ Error: error });
     }
 }
