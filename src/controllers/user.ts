@@ -118,7 +118,6 @@ export async function modifyUsersPass(req: Request, res: Response) {
             const repo = getRepository(User);
             const user = await repo.findOne({ id: req.params.userId });
             if (user instanceof User) {
-
                 const valid = await bcrypt.compare(req.body.oldPass, user.password);
                 if (!valid) {
                     res.status(403).json({ message: "Mot de passe invalide." });
@@ -126,7 +125,6 @@ export async function modifyUsersPass(req: Request, res: Response) {
                 user.password = await bcrypt.hash(req.body.password, 15);
                 await repo.save(user);
                 res.status(200).json({ message: "Le mot de passe à bien été modifié !!" });
-
             } else {
                 res.status(404).json({ message: "Aucun utilisateur trouvé avec cet identifiant !!" });
             }
