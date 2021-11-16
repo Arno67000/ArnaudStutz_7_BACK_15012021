@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwebtkn from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config;
 
 export function auth(req: Request, res: Response, next: NextFunction) {
     try {
         const token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : undefined;
-        const checkedToken = token ? jwebtkn.verify(token, "CRYPTAGEDUTOKEN2226080389") : token;
+        const checkedToken = token ? jwebtkn.verify(token, process.env.SECRET!) : token;
         if (checkedToken && typeof checkedToken !== "string") {
             const userId = checkedToken.id;
             const userRole = checkedToken.role;
             req.body.allowedUser = { id: userId, role: userRole };
-            console.log(req.body);
             if (userId && userRole) {
                 next();
             } else {
