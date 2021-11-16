@@ -1,43 +1,40 @@
-import * as express from 'express';
-import {Application, Response, Request, NextFunction} from 'express';
-import * as bodyParser from 'body-parser';
-import * as dotenv from 'dotenv';
-dotenv.config();
-import * as helmet from 'helmet';
-import * as morgan from 'morgan';
+import express, { Application, Response, Request, NextFunction } from "express";
+//Logger
+import helmet from "helmet";
+import morgan from "morgan";
+import { LoggerStream } from "./logger/winstonConfig";
 
-import { userRouter } from './routes/user';
-import { createConnection } from 'typeorm';
-import { tweetRouter } from './routes/tweet';
-import { LoggerStream } from './logger/winstonConfig';
+//Routers
+import { userRouter } from "./routes/user";
+import { tweetRouter } from "./routes/tweet";
+
+import { createConnection } from "typeorm";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const app: Application = express();
 
 app.use(helmet());
-app.use(morgan('combined', { stream: new LoggerStream() }));
+app.use(morgan("combined", { stream: new LoggerStream() }));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+    );
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
     next();
 });
 
 createConnection()
     .then(() => {
-        console.log('Connecté à la DATABASE : port '+process.env.TYPEORM_PORT);
+        console.log(`Connected to ${process.env.TYPEORM_DATABASE} DB on port: ${process.env.TYPEORM_PORT}`);
     })
-    .catch(err => console.log('Error: DATABASE_CONNECTION FAILED =>'+err));
+    .catch((err) => console.log("Error: DATABASE_CONNECTION FAILED =>" + err));
 
-app.use(bodyParser.json({ limit: "1kb" }));
-app.use(bodyParser.urlencoded({extended: false, limit: "1kb"}));
+app.use(express.json({ limit: "1kb" }));
+app.use(express.urlencoded({ extended: false, limit: "1kb" }));
 
-app.use('/user', userRouter);
-app.use('/tweets', tweetRouter);
-
-// error handler
-app.use(function(err: any, req: Request, res: Response, next: NextFunction) {
-    res.status(err.status || 500);
-    res.render('error');
-   });
-  
+app.use("/user", userRouter);
+app.use("/tweets", tweetRouter);
