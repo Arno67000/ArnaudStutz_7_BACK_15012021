@@ -47,12 +47,11 @@ export async function postTweet(req: Request, res: Response) {
                 user: {
                     ...updatedTweet.user,
                     pseudo: decodeURI(updatedTweet.user.pseudo),
-                }
+                },
             });
         } else {
             res.status(403).json({ message: "La requête nécessite une authentification" });
         }
-
     } catch (error) {
         res.status(500).json({ Error: error });
     }
@@ -92,7 +91,7 @@ export async function deleteTweet(req: Request, res: Response) {
             }
         } else {
             res.status(403).json({ message: "La requête nécessite une authentification" });
-        }       
+        }
     } catch (error) {
         res.status(500).json({ Error: error });
     }
@@ -156,7 +155,7 @@ export async function modifyTweet(req: Request, res: Response) {
             }
         } else {
             res.status(403).json({ message: "La requête nécessite une authentification" });
-        }    
+        }
     } catch (error) {
         res.status(500).json({ Error: error });
     }
