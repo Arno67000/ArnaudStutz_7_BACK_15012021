@@ -8,10 +8,6 @@ import { LoggerStream } from "./logger/winstonConfig";
 import { userRouter } from "./routes/user";
 import { tweetRouter } from "./routes/tweet";
 
-import { createConnection } from "typeorm";
-import dotenv from "dotenv";
-dotenv.config();
-
 export const app: Application = express();
 
 app.use(helmet());
@@ -26,12 +22,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
     next();
 });
-
-createConnection()
-    .then(() => {
-        console.log(`Connected to ${process.env.TYPEORM_DATABASE} DB on port: ${process.env.TYPEORM_PORT}`);
-    })
-    .catch((err) => console.log("Error: DATABASE_CONNECTION FAILED =>" + err));
 
 app.use(express.json({ limit: "1kb" }));
 app.use(express.urlencoded({ extended: false, limit: "1kb" }));
