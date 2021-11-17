@@ -3,7 +3,7 @@ import path = require("path");
 
 const options = {
     file: {
-        level: "info",
+        level: "error",
         filename: path.join(__dirname, "app.log"),
         handleExceptions: true,
         json: true,
@@ -12,14 +12,23 @@ const options = {
         colorize: false,
     },
     console: {
-        level: "info",
         handleExceptions: true,
         json: false,
-        colorize: true,
+        colorize: true
     },
 };
 
-const logger = winston.createLogger({
+const colors = {
+    info: "blue",
+    error: "red",
+    warn: "orange"
+}
+
+export const logger = winston.createLogger({
+    format: winston.format.combine(
+        winston.format.colorize({ message: true, colors: colors }),
+        winston.format.printf((obj) => `${new Date(Date.now()).toLocaleString()} : ${obj.message}`),
+    ),
     transports: [new winston.transports.File(options.file), new winston.transports.Console(options.console)],
     exitOnError: false, // do not exit on handled exceptions
 });
