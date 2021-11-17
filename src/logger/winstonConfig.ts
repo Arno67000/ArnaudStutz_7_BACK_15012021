@@ -14,20 +14,20 @@ const options = {
     console: {
         handleExceptions: true,
         json: false,
-        colorize: true
+        colorize: true,
     },
 };
 
 const colors = {
     info: "blue",
     error: "red",
-    warn: "orange"
-}
+    warn: "orange",
+};
 
 export const logger = winston.createLogger({
     format: winston.format.combine(
         winston.format.colorize({ message: true, colors: colors }),
-        winston.format.printf((obj) => `${new Date(Date.now()).toLocaleString()} : ${obj.message}`),
+        winston.format.printf((obj) => `${new Date(Date.now()).toLocaleString()} : ${obj.message}`)
     ),
     transports: [new winston.transports.File(options.file), new winston.transports.Console(options.console)],
     exitOnError: false, // do not exit on handled exceptions
