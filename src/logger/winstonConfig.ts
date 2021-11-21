@@ -3,7 +3,7 @@ import path = require("path");
 
 const options = {
     file: {
-        level: "error",
+        level: "info",
         filename: path.join(__dirname, "app.log"),
         handleExceptions: true,
         json: true,

@@ -1,25 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwebtkn from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config;
+import { jwtSecret } from "../server";
 
 export function auth(req: Request, res: Response, next: NextFunction) {
     try {
         const token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : undefined;
-        const checkedToken = token ? jwebtkn.verify(token, process.env.SECRET!) : token;
-        if (checkedToken && typeof checkedToken !== "string") {
+        const checkedToken = token ? jwebtkn.verify(token, jwtSecret) : token;
+        if (checkedToken && typeof checkedToken !== "string" && checkedToken.id && checkedToken.role) {
             const userId = checkedToken.id;
             const userRole = checkedToken.role;
             req.body.allowedUser = { id: userId, role: userRole };
-            if (userId && userRole) {
-                next();
-            } else {
-                res.status(403).json({ message: "La requête nécessite authentification." });
-            }
+            next();
         } else {
-            res.status(403).json({ message: "La requête nécessite authentification." });
+            res.status(403).json({ error: "Authentication required" });
         }
     } catch (err) {
-        return res.status(500).json({ err });
+        res.status(500).json({ err });
     }
 }
