@@ -1,65 +1,32 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
-import jwebtkn from "jsonwebtoken";
+
+// managers
+import { saveUser, checkUser } from "../managers/userManager";
+
 import dotenv from "dotenv";
+import { ApiError } from "src/tools/customError";
 dotenv.config();
 
 export async function signup(req: Request, res: Response) {
     try {
-        const repo = getRepository(User);
-        //Vérification de la disponibilité du pseudo (pseudo unique)
-        const checkingPseudo = await repo.findOne({ pseudo: encodeURI(req.body.pseudo) });
-        if (checkingPseudo) {
-            res.status(400).json({ message: "Pseudo déjà utilisé" });
-        }
-        const hash = await bcrypt.hash(req.body.password, 15);
-        const user = new User();
-        user.firstName = Buffer.from(req.body.firstName, "binary").toString("base64");
-        user.lastName = Buffer.from(req.body.lastName, "binary").toString("base64");
-        user.pseudo = encodeURI(req.body.pseudo);
-        user.password = hash;
-        if (req.body.pseudo === "admin") {
-            user.role = "Moderateur";
-        } else {
-            user.role = "User";
-        }
-        await repo.save(user);
-        res.status(201).json({ message: "Nouvel utilisateur enregistré ! " });
+        await saveUser(req.body);
+        res.status(201).json({ message: "New user created" });
     } catch (error) {
-        res.status(500).json({ Error: error });
+        if (error instanceof ApiError) {
+            res.status(error.code).json({ Error: error.message });
+        } else {
+            res.status(500).json({ Error: error });
+
+        }
     }
 }
 
 export async function login(req: Request, res: Response) {
     try {
-        const repo = getRepository(User);
-        const user = await repo.findOne({ pseudo: encodeURI(req.body.pseudo) });
-        if (user instanceof User) {
-            const checkedPassword = await bcrypt.compare(req.body.password, user.password);
-            if (checkedPassword) {
-                res.status(200).json({
-                    pseudo: decodeURI(user.pseudo),
-                    firstName: Buffer.from(user.firstName, "base64").toString("utf-8"),
-                    lastName: Buffer.from(user.lastName, "base64").toString("utf-8"),
-                    role: user.role,
-                    id: user.id,
-                    token: jwebtkn.sign(
-                        {
-                            id: user.id,
-                            role: user.role,
-                        },
-                        process.env.SECRET!,
-                        { expiresIn: "24h" }
-                    ),
-                });
-            } else {
-                res.status(403).json({ message: "Mot de passe invalide." });
-            }
-        } else {
-            res.status(404).json({ message: "Pseudo non valide !!" });
-        }
+        const user = await checkUser(req.body);
+        res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ Error: error });
     }
