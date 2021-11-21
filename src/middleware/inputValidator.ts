@@ -43,8 +43,8 @@ export function inputValidationRules() {
 export function validate(req: Request, res: Response, next: NextFunction) {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
-        return next();
+        next();
     } else {
-        return res.status(400).json({ errors });
+        res.status(406).json({ errors });
     }
 }

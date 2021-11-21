@@ -5,27 +5,27 @@ import { ApiError } from "../tools/customError";
 import { jwtSecret } from "../server";
 import jwebtkn from "jsonwebtoken";
 
-export async function saveUser(user: User): Promise<void> {
+export async function saveUser(user: User, signup?: boolean): Promise<void> {
     const repo = getRepository(User);
-    await checkUniquePseudo(user.pseudo, repo);
+    if (signup) await checkUniquePseudo(user.pseudo, repo);
     const newUser = await encodeUser(user);
     await repo.save(newUser);
 }
 
-export async function checkUser(user: User): Promise<User> {
-    const dbUser = await findUser("pseudo", user.pseudo);
-    if (!dbUser || !(await checkUserPassword(user.password, dbUser.password))) {
+export async function checkUser(password: string, key: string, value: string): Promise<User> {
+    const dbUser = await findUser(key, value);
+    if (!dbUser || !(await checkUserPassword(password, dbUser.password))) {
         throw new ApiError("Wrong login or wrong password", 403);
     }
     return dbUser;
 }
 
-async function findUser(key: string, value: string): Promise<User | undefined> {
+export async function findUser(key: string, value: string): Promise<User | undefined> {
     const repo = getRepository(User);
     return await repo.findOne({ [key]: encodeURI(value) });
 }
 
-async function checkUserPassword(passwordValue: string, expectedValue: string): Promise<boolean> {
+export async function checkUserPassword(passwordValue: string, expectedValue: string): Promise<boolean> {
     return await bcrypt.compare(passwordValue, expectedValue);
 }
 
@@ -34,10 +34,9 @@ async function checkUniquePseudo(pseudo: string, repo: Repository<User>): Promis
     if (pseudoExists) {
         throw new ApiError("Pseudo already used", 400);
     }
-    return;
 }
 
-export function decodeUser(user: User, login?: boolean): Record<string, unknown> {
+export function decodeUser(user: User, login?: boolean): Partial<User> | Record<string, unknown> {
     if (login) {
         return {
             pseudo: decodeURI(user.pseudo),
@@ -74,4 +73,9 @@ async function encodeUser(user: User): Promise<Partial<User>> {
         password: hash,
         role: user.pseudo === "admin" ? "Moderateur" : "User",
     };
+}
+
+export async function removeUser(user: User): Promise<void> {
+    const repo = getRepository(User);
+    await repo.remove(user);
 }
