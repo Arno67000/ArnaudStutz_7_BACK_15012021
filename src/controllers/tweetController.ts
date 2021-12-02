@@ -9,7 +9,7 @@ import {
     removeTweet,
     checkUserTweet,
 } from "../managers/tweetManager";
-import { ApiError } from "src/tools/customError";
+import { ApiError } from "../tools/customError";
 
 export async function getAllTweets(req: Request, res: Response): Promise<Response> {
     try {

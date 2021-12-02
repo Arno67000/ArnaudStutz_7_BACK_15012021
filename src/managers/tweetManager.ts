@@ -40,10 +40,7 @@ export async function removeTweet(tweet: Tweet): Promise<void> {
 }
 
 export async function checkUserTweet(tweetId: string, userId: string): Promise<void> {
-    const user = await findUser("id", userId, true);
-    if (!user) {
-        throw new ApiError("User not found", 404);
-    }
+    const user = await findUser({ key: "id", value: userId, relations: true });
     const valid = user.tweets.find((tweet) => tweet.id === tweetId);
     if (!valid) {
         throw new ApiError("Forbidden action", 403);
