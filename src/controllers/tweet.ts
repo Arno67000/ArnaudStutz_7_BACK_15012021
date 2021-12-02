@@ -91,7 +91,6 @@ export async function deleteTweet(req: Request, res: Response): Promise<Response
 
 export async function modifyTweet(req: Request, res: Response): Promise<Response> {
     try {
-        const repo = getRepository(Tweet);
         if (!req.body.allowedUser) {
             return res.status(403).json({ error: "Authentication required" });
         }
@@ -105,8 +104,10 @@ export async function modifyTweet(req: Request, res: Response): Promise<Response
         }
         const validTweet = user.tweets.find((tweet) => tweet.id === req.params.tweetId);
         if (!validTweet && req.body.allowedUser.id === req.body.user.id) {
+            //user has no tweet with the provided id and isn't moderator
             return res.status(404).json({ message: "Tweet not found" });
         }
+        const repo = getRepository(Tweet);
         const tweet = await repo.findOne({
             relations: ["user"],
             where: { id: req.params.tweetId },
