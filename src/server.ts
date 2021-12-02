@@ -3,13 +3,12 @@ import { createConnection } from "typeorm";
 import { logger } from "./logger/winstonConfig";
 import { ApiError } from "./tools/customError";
 import * as dotenv from "dotenv";
+dotenv.config();
 
 const { FRONT_URL, APP_PORT, TYPEORM_DATABASE, TYPEORM_PORT, SECRET } = process.env;
 
 export let frontUrl: string;
 export let jwtSecret: string;
-
-dotenv.config();
 
 (async () => {
     try {

@@ -1,5 +1,5 @@
 import * as express from "express";
-import { login, signup, deleteUser, getCurrentUser, modifyUsersPass } from "../controllers/user";
+import { login, signup, deleteUser, getCurrentUser, modifyUsersPass } from "../controllers/userController";
 import { auth } from "../middleware/auth";
 import { userValidationRules, validate, userParamsValidationChain } from "../middleware/inputValidator";
 import { loginLimiter } from "../middleware/rateLimiter";

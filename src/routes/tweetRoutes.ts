@@ -1,6 +1,6 @@
 import * as express from "express";
 import { auth } from "../middleware/auth";
-import { deleteTweet, getAllTweets, modifyTweet, postTweet } from "../controllers/tweet";
+import { deleteTweet, getAllTweets, modifyTweet, postTweet } from "../controllers/tweetController";
 import { inputValidationRules, validate, tweetParamsValidationChain } from "../middleware/inputValidator";
 
 export const tweetRouter = express.Router();

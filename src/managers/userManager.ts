@@ -13,16 +13,27 @@ export async function saveUser(user: User, signup?: boolean): Promise<void> {
 }
 
 export async function checkUser(password: string, key: string, value: string): Promise<User> {
-    const dbUser = await findUser(key, value);
+    const dbUser = await findUser(key, value, false, true);
     if (!dbUser || !(await checkUserPassword(password, dbUser.password))) {
         throw new ApiError("Wrong login or wrong password", 403);
     }
     return dbUser;
 }
 
-export async function findUser(key: string, value: string): Promise<User | undefined> {
+export async function findUser(
+    key: string,
+    value: string,
+    relations: boolean,
+    encoded?: boolean
+): Promise<User | undefined> {
+    let query;
+    if (encoded) {
+        query = relations ? { relations: ["tweets"], where: { [key]: encodeURI(value) } } : { [key]: encodeURI(value) };
+    } else {
+        query = relations ? { relations: ["tweets"], where: { [key]: value } } : { [key]: value };
+    }
     const repo = getRepository(User);
-    return await repo.findOne({ [key]: encodeURI(value) });
+    return await repo.findOne(query);
 }
 
 export async function checkUserPassword(passwordValue: string, expectedValue: string): Promise<boolean> {
