@@ -39,7 +39,7 @@ export async function deleteUser(req: Request, res: Response): Promise<Response>
         if (!req.body.allowedUser || req.params.userId !== req.body.allowedUser.id) {
             return res.status(403).json({ error: "Authentication required" });
         }
-        const user = await findUser("id", req.params.userId);
+        const user = await findUser("id", req.params.userId, false);
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
@@ -59,7 +59,7 @@ export async function getCurrentUser(req: Request, res: Response): Promise<Respo
         if (req.body.allowedUser) {
             return res.status(403).json({ error: "Authentication required" });
         }
-        const user = await findUser("id", req.body.allowedUser.id);
+        const user = await findUser("id", req.body.allowedUser.id, false);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }

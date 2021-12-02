@@ -41,11 +41,11 @@ export function inputValidationRules(): ValidationChain[] {
 }
 
 export function tweetParamsValidationChain(): ValidationChain[] {
-    return [param("tweetId").exists().isInt()];
+    return [param("tweetId").exists().isString()];
 }
 
 export function userParamsValidationChain(): ValidationChain[] {
-    return [param("userId").exists().isInt()];
+    return [param("userId").exists().isString()];
 }
 
 export function validate(req: Request, res: Response, next: NextFunction): void {

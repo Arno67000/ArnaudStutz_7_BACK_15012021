@@ -6,8 +6,8 @@ import { LoggerStream } from "./logger/winstonConfig";
 import { frontUrl } from "./server";
 
 //Routers
-import { userRouter } from "./routes/user";
-import { tweetRouter } from "./routes/tweet";
+import { userRouter } from "./routes/userRoutes";
+import { tweetRouter } from "./routes/tweetRoutes";
 
 export const app: Application = express();
 
