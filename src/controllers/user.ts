@@ -8,7 +8,7 @@ import { saveUser, checkUser, decodeUser, findUser, removeUser } from "../manage
 import dotenv from "dotenv";
 dotenv.config();
 
-export async function signup(req: Request, res: Response) {
+export async function signup(req: Request, res: Response): Promise<void> {
     try {
         await saveUser(req.body, true);
         res.status(201).json({ message: "New user created" });
@@ -21,7 +21,7 @@ export async function signup(req: Request, res: Response) {
     }
 }
 
-export async function login(req: Request, res: Response) {
+export async function login(req: Request, res: Response): Promise<void> {
     try {
         const user = await checkUser(req.body.password, "pseudo", req.body.pseudo);
         const decodedUser = decodeUser(user, true);
@@ -35,7 +35,7 @@ export async function login(req: Request, res: Response) {
     }
 }
 
-export async function deleteUser(req: Request, res: Response) {
+export async function deleteUser(req: Request, res: Response): Promise<void> {
     try {
         //Comparing token id and user id
         if (req.params.userId === req.body.allowedUser.id) {
@@ -44,7 +44,7 @@ export async function deleteUser(req: Request, res: Response) {
                 await removeUser(user);
                 res.status(200).json({ message: "User removed from database" });
             } else {
-                return res.status(404).json({ error: "User not found" });
+                res.status(404).json({ error: "User not found" });
             }
         } else {
             res.status(403).json({ error: "Authentication required" });
@@ -58,7 +58,7 @@ export async function deleteUser(req: Request, res: Response) {
     }
 }
 
-export async function getCurrentUser(req: Request, res: Response) {
+export async function getCurrentUser(req: Request, res: Response): Promise<void> {
     try {
         //Confirm token validation
         if (req.body.allowedUser) {
@@ -77,7 +77,7 @@ export async function getCurrentUser(req: Request, res: Response) {
     }
 }
 
-export async function modifyUsersPass(req: Request, res: Response) {
+export async function modifyUsersPass(req: Request, res: Response): Promise<void> {
     try {
         //Comparing token id and user id
         if (req.body.allowedUser && req.body.allowedUser.id === req.params.userId) {

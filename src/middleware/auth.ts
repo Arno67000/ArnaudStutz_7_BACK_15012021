@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import * as jwebtkn from "jsonwebtoken";
 import { jwtSecret } from "../server";
 
-export function auth(req: Request, res: Response, next: NextFunction) {
+export function auth(req: Request, res: Response, next: NextFunction): void {
     try {
         const token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : undefined;
         const checkedToken = token ? jwebtkn.verify(token, jwtSecret) : token;
