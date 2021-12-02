@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { check, validationResult } from "express-validator";
+import { check, ValidationChain, validationResult } from "express-validator";
 
-export function userValidationRules() {
+export function userValidationRules(): ValidationChain[] {
     return [
         check("pseudo")
             .isString()
@@ -30,7 +30,7 @@ export function userValidationRules() {
     ];
 }
 
-export function inputValidationRules() {
+export function inputValidationRules(): ValidationChain[] {
     return [
         check("content")
             .isString()
@@ -40,7 +40,7 @@ export function inputValidationRules() {
     ];
 }
 
-export function validate(req: Request, res: Response, next: NextFunction) {
+export function validate(req: Request, res: Response, next: NextFunction): void {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
         next();
