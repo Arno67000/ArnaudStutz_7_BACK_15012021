@@ -16,6 +16,7 @@ export let jwtSecret: string;
             throw new ApiError("Missing environment variables", 500);
         }
         frontUrl = FRONT_URL;
+        jwtSecret = SECRET;
         await createConnection();
         logger.info(`Connected to ${TYPEORM_DATABASE} DB on port: ${TYPEORM_PORT}`);
         app.listen(APP_PORT, () => logger.info(`Server running on port: ${APP_PORT}`));
