@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { check, ValidationChain, validationResult } from "express-validator";
+import { check, ValidationChain, validationResult, param } from "express-validator";
 
 export function userValidationRules(): ValidationChain[] {
     return [
@@ -38,6 +38,14 @@ export function inputValidationRules(): ValidationChain[] {
             .isLength({ min: 4, max: 250 })
             .withMessage("Le message peut contenir de 4 à 250 caractères."),
     ];
+}
+
+export function tweetParamsValidationChain(): ValidationChain[] {
+    return [param("tweetId").exists().isInt()];
+}
+
+export function userParamsValidationChain(): ValidationChain[] {
+    return [param("userId").exists().isInt()];
 }
 
 export function validate(req: Request, res: Response, next: NextFunction): void {
