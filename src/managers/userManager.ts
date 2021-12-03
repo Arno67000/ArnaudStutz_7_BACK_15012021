@@ -15,7 +15,7 @@ export async function saveUser(user: User, signup?: boolean): Promise<void> {
 export async function checkUser(password: string, key: string, value: string): Promise<User> {
     const dbUser = await findUser({ key, value, relations: false, encoded: true });
     if (!(await checkUserPassword(password, dbUser.password))) {
-        throw new ApiError("Wrong login or wrong password", 403);
+        throw new ApiError("Error", "Wrong login or wrong password", 403);
     }
     return dbUser;
 }
@@ -40,7 +40,7 @@ export async function findUser({
     const repo = getRepository(User);
     const user = await repo.findOne(query);
     if (!user) {
-        throw new ApiError("User not found", 404);
+        throw new ApiError("Error", "User not found", 404);
     }
     return user;
 }
@@ -52,7 +52,7 @@ export async function checkUserPassword(passwordValue: string, expectedValue: st
 async function checkUniquePseudo(pseudo: string, repo: Repository<User>): Promise<void> {
     const pseudoExists = await repo.findOne({ pseudo: encodeURI(pseudo) });
     if (pseudoExists) {
-        throw new ApiError("Pseudo already used", 400);
+        throw new ApiError("Error", "Pseudo already used", 400);
     }
 }
 
