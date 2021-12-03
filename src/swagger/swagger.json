@@ -13,7 +13,247 @@
             "url": "/"
         }
     ],
-    "paths": {},
+    "paths": {
+        "/user": {
+            "get": {
+                "summary": "GET current user",
+                "description": "This route is used to retrieve informations of the current user based on its token (`a JWT token is mandatory`).",
+                "tags": ["Users"],
+                "operationId": "get",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "You recieve all stored informations about YOU.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/loggedUser"
+                                },
+                                "examples": {
+                                    "Valid request on /user": {
+                                        "value": {
+                                            "pseudo": "chosenPseudo",
+                                            "firstName": "yourFirstName",
+                                            "lastName": "yourFamilyName",
+                                            "role": "user",
+                                            "id": "0a06fce0-c4dd-4c0c-a59a-d986018y48t445z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided token is invalid or expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user": {
+                                        "value": {
+                                            "Error": "Authentication required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/signup": {
+            "post": {
+                "summary": "SIGNUP user",
+                "description": "This route is used to add a new user to the application.",
+                "tags": ["Users"],
+                "operationId": "sign",
+                "parameters": [],
+                "requestBody": {
+                    "description": "An object containing the needed fields to sign the user up.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/foreignUser"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "The new user has been created.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responseMessage"
+                                },
+                                "examples": {
+                                    "Valid request on /user/signup": {
+                                        "value": {
+                                            "message": "New user created"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The provided pseudo is already used",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed for unicity constraint on pseudo on /user/signup": {
+                                        "value": {
+                                            "Error": "Pseudo already used"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "summary": "LOG IN user",
+                "description": "This route is used to log the user in the application.",
+                "tags": ["Users"],
+                "operationId": "log",
+                "parameters": [],
+                "requestBody": {
+                    "description": "An object containing the pseudo and password to log the user.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "You'll access the main page of the app with a token set.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/loggedUser"
+                                },
+                                "examples": {
+                                    "Valid request on /user/login": {
+                                        "value": {
+                                            "pseudo": "chosenPseudo",
+                                            "firstName": "yourFirstName",
+                                            "lastName": "yourFamilyName",
+                                            "role": "user",
+                                            "id": "0a06fce0-c4dd-4c0c-a59a-d986018y48t445z",
+                                            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBhMDZmY2UwLWM0ZGQtNGMwYy1hNTlhLWQ5ODYwMTgzYjk0MiIsInJvbGUiOiJNb2RlcmF0ZXVyIiwiaWF0IjoxNjM4NTUyNTE4LCJleHAiOjE2Mzg2Mzg5MTh9.FgretL69tFmyOyXuz0nQ5jYcGLLkcGi5nxGFa6HHLAE"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided credentials are wrong",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user/login": {
+                                        "value": {
+                                            "Error": "Wrong credentials"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The provided pseudo is not in database, you may have to signup first",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user/login": {
+                                        "value": {
+                                            "Error": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     "components": {
         "securitySchemes": {
             "bearerAuth": {
@@ -22,11 +262,98 @@
             }
         },
         "schemas": {
-            "test": {
-                "type": "array",
-                "items": {
-                    "type": "string"
-                }
+            "foreignUser": {
+                "type": "object",
+                "properties": {
+                    "pseudo": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    }
+                },
+                "required": ["pseudo", "password", "firstName", "lastName"]
+            },
+            "userLogin": {
+                "type": "object",
+                "properties": {
+                    "pseudo": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": ["pseudo", "password"]
+            },
+            "loggedUser": {
+                "type": "object",
+                "properties": {
+                    "pseudo": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                },
+                "required": ["pseudo", "password", "firstName", "lastName", "id", "token"]
+            },
+            "user": {
+                "type": "object",
+                "properties": {
+                    "pseudo": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    }
+                },
+                "required": ["pseudo", "password", "firstName", "lastName", "id"]
+            },
+            "responseMessage": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "required": ["message"]
+            },
+            "errorMessage": {
+                "type": "object",
+                "properties": {
+                    "Error": {
+                        "type": "string"
+                    }
+                },
+                "required": ["Error"]
             }
         }
     }

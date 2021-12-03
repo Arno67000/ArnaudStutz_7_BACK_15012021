@@ -13,7 +13,17 @@
             "url": "/"
         }
     ],
-    "paths": {},
+    "paths": {
+        "/user": {
+            "$ref": "./routes/getUser.json"
+        },
+        "/user/signup": {
+            "$ref": "./routes/signup.json"
+        },
+        "/user/login": {
+            "$ref": "./routes/login.json"
+        }
+    },
     "components": {
         "securitySchemes": {
             "bearerAuth": {

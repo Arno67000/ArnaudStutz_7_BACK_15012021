@@ -1,5 +1,20 @@
 {
-    "test": {
-        "$ref": "./test.json"
+    "foreignUser": {
+        "$ref": "./foreignUser.json"
+    },
+    "userLogin": {
+        "$ref": "./userLogin.json"
+    },
+    "loggedUser": {
+        "$ref": "./loggedUser.json"
+    },
+    "user": {
+        "$ref": "./user.json"
+    },
+    "responseMessage": {
+        "$ref": "./responseMessage.json"
+    },
+    "errorMessage": {
+        "$ref": "./errorMessage.json"
     }
 }

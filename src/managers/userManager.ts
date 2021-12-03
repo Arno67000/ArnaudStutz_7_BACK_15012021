@@ -15,7 +15,7 @@ export async function saveUser(user: User, signup?: boolean): Promise<void> {
 export async function checkUser(password: string, key: string, value: string): Promise<User> {
     const dbUser = await findUser({ key, value, relations: false, encoded: true });
     if (!(await checkUserPassword(password, dbUser.password))) {
-        throw new ApiError("Error", "Wrong login or wrong password", 403);
+        throw new ApiError("Error", "Wrong credentials", 403);
     }
     return dbUser;
 }

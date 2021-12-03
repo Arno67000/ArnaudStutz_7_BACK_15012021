@@ -1,0 +1,21 @@
+{
+    "type": "object",
+    "properties": {
+        "pseudo": {
+            "type": "string"
+        },
+        "password": {
+            "type": "string"
+        },
+        "firstName": {
+            "type": "string"
+        },
+        "lastName": {
+            "type": "string"
+        },
+        "id": {
+            "type": "string"
+        }
+    },
+    "required": ["pseudo", "password", "firstName", "lastName", "id"]
+}
