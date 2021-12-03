@@ -1,0 +1,28 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "API Groupomania",
+        "description": "This is the Groupomania API documentation",
+        "license": {
+            "name": "AS67000"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "paths": {},
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "$ref": "./schemas/_index.json"
+        }
+    }
+}

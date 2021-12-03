@@ -1,4 +1,6 @@
 import express, { Application, Response, Request, NextFunction } from "express";
+import * as swaggerDoc from "./swagger/swagger.json";
+import swaggerUi from "swagger-ui-express";
 //Logger
 import helmet from "helmet";
 import morgan from "morgan";
@@ -29,3 +31,4 @@ app.use(express.urlencoded({ extended: false, limit: "1kb" }));
 
 app.use("/user", userRouter);
 app.use("/tweets", tweetRouter);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
