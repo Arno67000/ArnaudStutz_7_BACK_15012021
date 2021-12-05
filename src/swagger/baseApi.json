@@ -22,6 +22,15 @@
         },
         "/user/login": {
             "$ref": "./routes/login.json"
+        },
+        "/user/{userId}": {
+            "$ref": "./routes/userById.json"
+        },
+        "/tweets": {
+            "$ref": "./routes/tweets.json"
+        },
+        "/tweets/{tweetId}": {
+            "$ref": "./routes/tweetsById.json"
         }
     },
     "components": {

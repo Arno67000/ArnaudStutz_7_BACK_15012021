@@ -15,6 +15,17 @@
         },
         "id": {
             "type": "string"
+        },
+        "tweets": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "schemas": {
+                        "$ref": "./tweet.json"
+                    }
+                }
+            }
         }
     },
     "required": ["pseudo", "password", "firstName", "lastName", "id"]

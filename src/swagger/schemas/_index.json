@@ -11,10 +11,22 @@
     "user": {
         "$ref": "./user.json"
     },
+    "userPassword": {
+        "$ref": "./userPassword.json"
+    },
     "responseMessage": {
         "$ref": "./responseMessage.json"
     },
     "errorMessage": {
         "$ref": "./errorMessage.json"
+    },
+    "tweet": {
+        "$ref": "./tweet.json"
+    },
+    "tweetContent": {
+        "$ref": "./tweetContent.json"
+    },
+    "tweetArray": {
+        "$ref": "./tweetArray.json"
     }
 }

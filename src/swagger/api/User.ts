@@ -9,7 +9,7 @@
  * ---------------------------------------------------------------
  */
 
-import { ErrorMessage, ForeignUser, LoggedUser, ResponseMessage, UserLogin } from "./data-contracts";
+import { ErrorMessage, ForeignUser, LoggedUser, ResponseMessage, UserLogin, UserPassword } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
@@ -60,6 +60,42 @@ export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataTyp
             path: `/user/login`,
             method: "POST",
             body: data,
+            type: ContentType.Json,
+            format: "json",
+            ...params,
+        });
+    /**
+     * @description This route is used to remove user and all its informations from the database (`a JWT token is mandatory`).
+     *
+     * @tags Users
+     * @name Delete
+     * @summary DELETE user
+     * @request DELETE:/user/{userId}
+     * @secure
+     */
+    delete = (userId: string, params: RequestParams = {}) =>
+        this.request<ResponseMessage, ErrorMessage>({
+            path: `/user/${userId}`,
+            method: "DELETE",
+            secure: true,
+            format: "json",
+            ...params,
+        });
+    /**
+     * @description This route is used to change the actual password of the user (`a JWT token is mandatory`).
+     *
+     * @tags Users
+     * @name Modify
+     * @summary MODIFY user's password
+     * @request PUT:/user/{userId}
+     * @secure
+     */
+    modify = (userId: string, data: UserPassword, params: RequestParams = {}) =>
+        this.request<ResponseMessage, ErrorMessage>({
+            path: `/user/${userId}`,
+            method: "PUT",
+            body: data,
+            secure: true,
             type: ContentType.Json,
             format: "json",
             ...params,

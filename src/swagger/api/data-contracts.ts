@@ -36,6 +36,12 @@ export interface User {
     firstName: string;
     lastName: string;
     id: string;
+    tweets?: { schemas?: Tweet }[];
+}
+
+export interface UserPassword {
+    oldPass?: string;
+    password?: string;
 }
 
 export interface ResponseMessage {
@@ -45,3 +51,16 @@ export interface ResponseMessage {
 export interface ErrorMessage {
     Error: string;
 }
+
+export interface Tweet {
+    id: string;
+    content: string;
+    date: string;
+    user?: { schema?: User };
+}
+
+export interface TweetContent {
+    content: string;
+}
+
+export type TweetArray = { schema?: Tweet }[];
