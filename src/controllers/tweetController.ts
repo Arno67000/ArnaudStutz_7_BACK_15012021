@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { findUser } from "src/managers/userManager";
 import { Tweet } from "../entity/Tweet";
 import {
     getAll,
@@ -30,8 +31,10 @@ export async function postTweet(req: Request, res: Response): Promise<Response> 
         if (req.body.user.id !== req.body.allowedUser.id) {
             return res.status(403).json({ error: "Authentication required" });
         }
+        const user = await findUser({ key: "id", value: req.body.user.id, relations: false, encoded: false });
         let tweet = new Tweet();
         tweet = encodeTweetContent(req.body);
+        tweet.user = user;
         const createdTweet = await saveTweet(tweet);
         return res.status(201).json(decodeTweet(createdTweet));
     } catch (error) {

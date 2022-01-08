@@ -10,6 +10,9 @@ import { LoggerStream } from "./logger/winstonConfig";
 import { userRouter } from "./routes/userRoutes";
 import { tweetRouter } from "./routes/tweetRoutes";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 export const app: Application = express();
 
 app.use(helmet());
