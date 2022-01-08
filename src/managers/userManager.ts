@@ -2,7 +2,6 @@ import { getRepository, Repository } from "typeorm";
 import { User } from "../entity/User";
 import bcrypt from "bcrypt";
 import { ApiError } from "../tools/customError";
-import { jwtSecret } from "../server";
 import jwebtkn from "jsonwebtoken";
 
 export async function saveUser(user: User, signup?: boolean): Promise<void> {
@@ -57,8 +56,8 @@ async function checkUniquePseudo(pseudo: string, repo: Repository<User>): Promis
 }
 
 export function decodeUser(user: User, login?: boolean): Partial<User> | Record<string, unknown> {
+    const jwtSecret = process.env.SECRET ?? "";
     if (login) {
-        console.log(user.role, user.id, jwtSecret);
         return {
             pseudo: decodeURI(user.pseudo),
             firstName: Buffer.from(user.firstName, "base64").toString("utf-8"),

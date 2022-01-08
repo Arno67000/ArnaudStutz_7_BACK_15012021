@@ -56,8 +56,8 @@ export function encodeTweetContent(tweet: Tweet): Tweet {
 export function decodeTweet(tweet: Tweet): Tweet {
     tweet.content = decodeURI(tweet.content);
     tweet.user = {
-        ...tweet.user,
         pseudo: decodeURI(tweet.user.pseudo),
+        id: tweet.user.id,
     } as User;
     return tweet;
 }
