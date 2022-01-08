@@ -3,7 +3,7 @@ import { User } from "../entity/User";
 import bcrypt from "bcrypt";
 import { ApiError } from "../tools/customError";
 import jwebtkn from "jsonwebtoken";
-import { Tweet } from "src/entity/Tweet";
+import { Tweet } from "../entity/Tweet";
 
 import dotenv from "dotenv";
 dotenv.config();

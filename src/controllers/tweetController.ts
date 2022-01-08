@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { findUser } from "src/managers/userManager";
+import { findUser } from "../managers/userManager";
 import { Tweet } from "../entity/Tweet";
 import {
     getAll,
