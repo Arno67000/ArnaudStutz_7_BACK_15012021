@@ -1,20 +1,20 @@
 import { NextFunction, Request, Response } from "express";
 import * as jwebtkn from "jsonwebtoken";
-import { jwtSecret } from "../server";
+import { logger } from "../logger/winstonConfig";
 
-export function auth(req: Request, res: Response, next: NextFunction): Response | void {
+export function authenticate(req: Request, res: Response, next: NextFunction): Response | void {
+    const jwtSecret = process.env.SECRET ?? "";
     try {
         const token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : undefined;
         const checkedToken = token ? jwebtkn.verify(token, jwtSecret) : token;
         if (checkedToken && typeof checkedToken !== "string" && checkedToken.id && checkedToken.role) {
-            const userId = checkedToken.id;
-            const userRole = checkedToken.role;
-            req.body.allowedUser = { id: userId, role: userRole };
+            req.body.allowedUser = { id: checkedToken.id, role: checkedToken.role };
             return next();
         } else {
             return res.status(403).json({ error: "Authentication required" });
         }
-    } catch (err) {
-        return res.status(500).json({ err });
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({ error });
     }
 }

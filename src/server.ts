@@ -7,17 +7,12 @@ dotenv.config();
 
 const { FRONT_URL, APP_PORT, TYPEORM_DATABASE, TYPEORM_PORT, SECRET, NODE_ENV } = process.env;
 
-export let frontUrl: string;
-export let jwtSecret: string;
-
 (async () => {
     try {
         if (NODE_ENV !== "test") {
             if (!FRONT_URL || !APP_PORT || !TYPEORM_DATABASE || !TYPEORM_PORT || !SECRET) {
                 throw new ApiError("Environment_Error", "Missing environment variables", 500);
             }
-            frontUrl = FRONT_URL;
-            jwtSecret = SECRET;
             await createConnection();
             logger.info(`Connected to ${TYPEORM_DATABASE} DB on port: ${TYPEORM_PORT}`);
             app.listen(APP_PORT, () => logger.info(`Server running on port: ${APP_PORT}`));
