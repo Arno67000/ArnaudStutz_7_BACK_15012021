@@ -1,7 +1,7 @@
 {
   "name": "grouposerv",
   "version": "1.0.0",
-  "description": "",
+  "description": "Groupomania_API",
   "main": "server.js",
   "scripts": {
     "build": "tsc --project ./",
@@ -12,11 +12,14 @@
     "prettier": "prettier --check **/*.{ts,json}",
     "prettier:fix": "prettier --write **/*.{ts,json}",
     "start": "node dist/server.js",
-    "test": "jest --detectOpenHandles --verbose",
-    "test:watch": "jest --detectOpenHandles --watch --verbose",
+    "swagger:gen": "npx swagger-typescript-api -p ./src/swagger/swagger.json -o ./src/swagger/api -t ./src/swagger/templates/modular --modular",
+    "swagger:bundle": "npx swagger-cli bundle ./src/swagger/baseApi.json --outfile ./src/swagger/swagger.json --type json",
+    "swagger:full": "yarn swagger:bundle && yarn swagger:gen && yarn prettier:fix",
+    "test": "set NODE_ENV=test&& jest --detectOpenHandles --verbose",
+    "test:watch": "set NODE_ENV=test&& jest --detectOpenHandles --silent --verbose --watch",
     "test:coverage": "jest --detectOpenHandles --coverage --verbose"
   },
-  "author": "",
+  "author": "Arno67000",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -30,6 +33,7 @@
     "mysql": "^2.18.1",
     "node": "16.13.0",
     "reflect-metadata": "^0.1.13",
+    "swagger-ui-express": "^4.2.0",
     "typeorm": "^0.2.41",
     "winston": "^3.3.3"
   },
@@ -41,6 +45,7 @@
     "@types/jsonwebtoken": "^8.5.6",
     "@types/morgan": "^1.9.3",
     "@types/node": "^16.11.7",
+    "@types/swagger-ui-express": "^4.1.3",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.2.0",

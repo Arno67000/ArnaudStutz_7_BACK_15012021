@@ -1,0 +1,47 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "API Groupomania",
+        "description": "This is the Groupomania API documentation",
+        "license": {
+            "name": "AS67000"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "paths": {
+        "/user": {
+            "$ref": "./routes/getUser.json"
+        },
+        "/user/signup": {
+            "$ref": "./routes/signup.json"
+        },
+        "/user/login": {
+            "$ref": "./routes/login.json"
+        },
+        "/user/{userId}": {
+            "$ref": "./routes/userById.json"
+        },
+        "/tweets": {
+            "$ref": "./routes/tweets.json"
+        },
+        "/tweets/{tweetId}": {
+            "$ref": "./routes/tweetsById.json"
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "$ref": "./schemas/_index.json"
+        }
+    }
+}

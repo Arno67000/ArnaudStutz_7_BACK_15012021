@@ -1,11 +1,11 @@
 import * as express from "express";
-import { auth } from "../middleware/auth";
+import { authenticate } from "../middleware/auth";
 import { deleteTweet, getAllTweets, modifyTweet, postTweet } from "../controllers/tweetController";
 import { inputValidationRules, validate, tweetParamsValidationChain } from "../middleware/inputValidator";
 
 export const tweetRouter = express.Router();
 
-tweetRouter.get("/", auth, getAllTweets);
-tweetRouter.post("/", inputValidationRules(), validate, auth, postTweet);
-tweetRouter.delete("/:tweetId", tweetParamsValidationChain(), validate, auth, deleteTweet);
-tweetRouter.put("/:tweetId", tweetParamsValidationChain(), inputValidationRules(), validate, auth, modifyTweet);
+tweetRouter.get("/", authenticate, getAllTweets);
+tweetRouter.post("/", inputValidationRules(), validate, authenticate, postTweet);
+tweetRouter.delete("/:tweetId", tweetParamsValidationChain(), validate, authenticate, deleteTweet);
+tweetRouter.put("/:tweetId", tweetParamsValidationChain(), inputValidationRules(), validate, authenticate, modifyTweet);

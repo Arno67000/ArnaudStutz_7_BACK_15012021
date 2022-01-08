@@ -23,8 +23,7 @@ export async function signup(req: Request, res: Response): Promise<Response> {
 export async function login(req: Request, res: Response): Promise<Response> {
     try {
         const user = await checkUser(req.body.password, "pseudo", req.body.pseudo);
-        const decodedUser = decodeUser(user, true);
-        return res.status(200).json(decodedUser);
+        return res.status(200).json(decodeUser(user, true));
     } catch (error) {
         if (error instanceof ApiError) {
             return res.status(error.code).json({ Error: error.message });
@@ -39,10 +38,7 @@ export async function deleteUser(req: Request, res: Response): Promise<Response>
         if (!req.body.allowedUser || req.params.userId !== req.body.allowedUser.id) {
             return res.status(403).json({ error: "Authentication required" });
         }
-        const user = await findUser("id", req.params.userId, false);
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
+        const user = await findUser({ key: "id", value: req.params.userId, relations: false });
         await removeUser(user);
         return res.status(200).json({ message: "User removed from database" });
     } catch (error) {
@@ -56,16 +52,16 @@ export async function deleteUser(req: Request, res: Response): Promise<Response>
 export async function getCurrentUser(req: Request, res: Response): Promise<Response> {
     try {
         //Confirm token validation
-        if (req.body.allowedUser) {
+        if (!req.body.allowedUser) {
             return res.status(403).json({ error: "Authentication required" });
         }
-        const user = await findUser("id", req.body.allowedUser.id, false);
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
+        const user = await findUser({ key: "id", value: req.body.allowedUser.id, relations: false });
         const decodedUser = decodeUser(user);
         return res.status(200).json(decodedUser);
     } catch (error) {
+        if (error instanceof ApiError) {
+            return res.status(error.code).json({ Error: error.message });
+        }
         return res.status(500).json({ Error: error });
     }
 }

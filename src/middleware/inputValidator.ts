@@ -7,7 +7,7 @@ export function userValidationRules(): ValidationChain[] {
             .isString()
             .trim()
             .isLength({ min: 3, max: 12 })
-            .withMessage("Le pseudo doit contenir entre 3 et 12 caractères, et aucun des caractères spéciaux"),
+            .withMessage("Pseudo must contain between 3 and 12 characters, and none of the special characters"),
         check("password")
             .isStrongPassword({
                 minLength: 8,
@@ -25,7 +25,7 @@ export function userValidationRules(): ValidationChain[] {
             })
             .withMessage({
                 message:
-                    "Le mot de passe doit contenir 8 caractères dont: 1 Majuscule, 1 minuscule, 1 chiffre ET un symbole",
+                    "Password must contain 8 characters including: 1 uppercase, 1 lowercase, 1 number AND a symbol",
             }),
     ];
 }
@@ -36,7 +36,7 @@ export function inputValidationRules(): ValidationChain[] {
             .isString()
             .trim()
             .isLength({ min: 4, max: 250 })
-            .withMessage("Le message peut contenir de 4 à 250 caractères."),
+            .withMessage("Message must contain between 4 and 250 characters."),
     ];
 }
 

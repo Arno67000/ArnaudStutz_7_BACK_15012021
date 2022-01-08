@@ -1,0 +1,73 @@
+{
+    "post": {
+        "summary": "SIGNUP user",
+        "description": "This route is used to add a new user to the application.",
+        "tags": ["Users"],
+        "operationId": "sign",
+        "parameters": [],
+        "requestBody": {
+            "description": "An object containing the needed fields to sign the user up.",
+            "required": true,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "../schemas/foreignUser.json"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "201": {
+                "description": "The new user has been created.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "../schemas/responseMessage.json"
+                        },
+                        "examples": {
+                            "Valid request on /user/signup": {
+                                "value": {
+                                    "message": "New user created"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "500": {
+                "description": "Unexpected error comming from application basic process",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "../schemas/errorMessage.json"
+                        },
+                        "examples": {
+                            "Error from application": {
+                                "value": {
+                                    "Error": "some unexpected error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "400": {
+                "description": "The provided pseudo is already used",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "../schemas/errorMessage.json"
+                        },
+                        "examples": {
+                            "Request failed for unicity constraint on pseudo on /user/signup": {
+                                "value": {
+                                    "Error": "Pseudo already used"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -9,7 +9,7 @@ import {
     removeTweet,
     checkUserTweet,
 } from "../managers/tweetManager";
-import { ApiError } from "src/tools/customError";
+import { ApiError } from "../tools/customError";
 
 export async function getAllTweets(req: Request, res: Response): Promise<Response> {
     try {
@@ -27,7 +27,7 @@ export async function getAllTweets(req: Request, res: Response): Promise<Respons
 export async function postTweet(req: Request, res: Response): Promise<Response> {
     try {
         //Token verification
-        if (!req.body.user.id === req.body.allowedUser.id) {
+        if (req.body.user.id !== req.body.allowedUser.id) {
             return res.status(403).json({ error: "Authentication required" });
         }
         let tweet = new Tweet();

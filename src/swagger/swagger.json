@@ -1,0 +1,991 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "API Groupomania",
+        "description": "This is the Groupomania API documentation",
+        "license": {
+            "name": "AS67000"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/"
+        }
+    ],
+    "paths": {
+        "/user": {
+            "get": {
+                "summary": "GET current user",
+                "description": "This route is used to retrieve informations of the current user based on its token (`a JWT token is mandatory`).",
+                "tags": ["Users"],
+                "operationId": "get",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "You recieve all stored informations about YOU.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/loggedUser"
+                                },
+                                "examples": {
+                                    "Valid request on /user": {
+                                        "value": {
+                                            "pseudo": "chosenPseudo",
+                                            "firstName": "yourFirstName",
+                                            "lastName": "yourFamilyName",
+                                            "role": "user",
+                                            "id": "0a06fce0-c4dd-4c0c-a59a-d986018y48t445z"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided token is invalid or expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user": {
+                                        "value": {
+                                            "Error": "Authentication required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/signup": {
+            "post": {
+                "summary": "SIGNUP user",
+                "description": "This route is used to add a new user to the application.",
+                "tags": ["Users"],
+                "operationId": "sign",
+                "parameters": [],
+                "requestBody": {
+                    "description": "An object containing the needed fields to sign the user up.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/foreignUser"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "The new user has been created.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responseMessage"
+                                },
+                                "examples": {
+                                    "Valid request on /user/signup": {
+                                        "value": {
+                                            "message": "New user created"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The provided pseudo is already used",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed for unicity constraint on pseudo on /user/signup": {
+                                        "value": {
+                                            "Error": "Pseudo already used"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "summary": "LOG IN user",
+                "description": "This route is used to log the user in the application.",
+                "tags": ["Users"],
+                "operationId": "log",
+                "parameters": [],
+                "requestBody": {
+                    "description": "An object containing the pseudo and password to log the user.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "You'll access the main page of the app with a token set.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/loggedUser"
+                                },
+                                "examples": {
+                                    "Valid request on /user/login": {
+                                        "value": {
+                                            "pseudo": "chosenPseudo",
+                                            "firstName": "yourFirstName",
+                                            "lastName": "yourFamilyName",
+                                            "role": "user",
+                                            "id": "0a06fce0-c4dd-4c0c-a59a-d986018y48t445z",
+                                            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBhMDZmY2UwLWM0ZGQtNGMwYy1hNTlhLWQ5ODYwMTgzYjk0MiIsInJvbGUiOiJNb2RlcmF0ZXVyIiwiaWF0IjoxNjM4NTUyNTE4LCJleHAiOjE2Mzg2Mzg5MTh9.FgretL69tFmyOyXuz0nQ5jYcGLLkcGi5nxGFa6HHLAE"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided credentials are wrong",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user/login": {
+                                        "value": {
+                                            "Error": "Wrong credentials"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The provided pseudo is not in database, you may have to signup first",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user/login": {
+                                        "value": {
+                                            "Error": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{userId}": {
+            "delete": {
+                "summary": "DELETE user",
+                "description": "This route is used to remove user and all its informations from the database (`a JWT token is mandatory`).",
+                "tags": ["Users"],
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "required": true,
+                        "name": "userId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "uuid of the registered user."
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The user is successfully deleted and logged out of the application.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responseMessage"
+                                },
+                                "examples": {
+                                    "Valid request on /user/:userId": {
+                                        "value": {
+                                            "message": "User removed from database"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided token is invalid or expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user/:userId": {
+                                        "value": {
+                                            "Error": "Authentication required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The provided id is not in the database, this error is not expected since you are logged in with the same id, it can only happen if a bug occurs in the application",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user/:userId": {
+                                        "value": {
+                                            "Error": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "MODIFY user's password",
+                "description": "This route is used to change the actual password of the user (`a JWT token is mandatory`).",
+                "tags": ["Users"],
+                "operationId": "modify",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "required": true,
+                        "name": "userId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "uuid of the registered user."
+                    }
+                ],
+                "requestBody": {
+                    "description": "An object containing the user's current password and the user's new password.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userPassword"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The password modification succeeded, the new password is active.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responseMessage"
+                                },
+                                "examples": {
+                                    "Valid request on /user/:userId": {
+                                        "value": {
+                                            "message": "Password successfully modified"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided token is invalid or expired, or the old password is incorrect",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed with invalid token on /user/:userId": {
+                                        "value": {
+                                            "Error": "Authentication required"
+                                        }
+                                    },
+                                    "Request failed with invalid password on /user/:userId": {
+                                        "value": {
+                                            "Error": "Wrong credentials"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The provided id is not in the database, this error is not expected since you are logged in with the same id, it can only happen if a bug occurs in the application",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /user/:userId": {
+                                        "value": {
+                                            "Error": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tweets": {
+            "get": {
+                "summary": "GET all the tweets",
+                "description": "This route is used to retrieve all the tweets from the database (`a JWT token is mandatory`).",
+                "tags": ["Tweets"],
+                "operationId": "getAll",
+                "parameters": [],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "You recieve all stored tweets.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/tweetArray"
+                                },
+                                "examples": {
+                                    "Valid request on /tweets": {
+                                        "value": [
+                                            {
+                                                "id": "s154f85ssdd488-d68s8f866-f68s68f8855",
+                                                "content": "Hello world!!",
+                                                "date": "2021/12/02"
+                                            },
+                                            {
+                                                "id": "fg4845f1r84r-dg64648d46-d46g46d466",
+                                                "content": "I got a feeling",
+                                                "date": "2021/12/03"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided token is invalid or expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /tweets": {
+                                        "value": {
+                                            "Error": "Authentication required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "POST a new tweet",
+                "description": "This route is used to post a new tweet (`a JWT token is mandatory`).",
+                "tags": ["Tweets"],
+                "operationId": "post",
+                "parameters": [],
+                "requestBody": {
+                    "description": "An object containing the tweets content.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/tweetContent"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "You recieve the newly created tweet with its uuid.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/tweet"
+                                },
+                                "examples": {
+                                    "Valid post request on /tweets": {
+                                        "value": {
+                                            "id": "s154f85ssdd488-d68s8f866-f68s68f8855",
+                                            "content": "Hello world!!",
+                                            "date": "2021/12/02"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided token is invalid or expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /tweets": {
+                                        "value": {
+                                            "Error": "Authentication required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tweets/{tweetId}": {
+            "delete": {
+                "summary": "DELETE a tweet",
+                "description": "This route is used to remove a specific tweet (`a JWT token is mandatory`).",
+                "tags": ["Tweets"],
+                "operationId": "deleteTweet",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "required": true,
+                        "name": "tweetId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "uuid of the tweet."
+                    }
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The tweet has been successfully deleted.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responseMessage"
+                                },
+                                "examples": {
+                                    "Valid delete request on /tweets/:tweetId": {
+                                        "value": {
+                                            "message": "Tweet successfully deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided token is invalid or expired, or you're trying to remove a tweet that is not yours without being moderator",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed with invalid token on /tweets/:tweetId": {
+                                        "value": {
+                                            "Error": "Authentication required"
+                                        }
+                                    },
+                                    "Request failed with invalid user on /tweets/:tweetId": {
+                                        "value": {
+                                            "Error": "Forbidden action"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The tweet was not found in the database",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /tweets/:tweetId": {
+                                        "value": {
+                                            "Error": "Tweet not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "MODIFY a tweet",
+                "description": "This route is used to modify the content of a previously posted tweet (`a JWT token is mandatory`).",
+                "tags": ["Tweets"],
+                "operationId": "modifyContent",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "required": true,
+                        "name": "tweetId",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "uuid of the tweet."
+                    }
+                ],
+                "requestBody": {
+                    "description": "An object containing the tweets new content.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/tweetContent"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "You recieve the updated tweet.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/tweet"
+                                },
+                                "examples": {
+                                    "Valid put request on /tweets/:tweetId": {
+                                        "value": {
+                                            "id": "s154f85ssdd488-d68s8f866-f68s68f8855",
+                                            "content": "Hello modified world!!",
+                                            "date": "2021/12/02"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "The provided token is invalid or expired, or you're trying to modify a tweet that is not yours without being moderator",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed with invalid token on /tweets/:tweetId": {
+                                        "value": {
+                                            "Error": "Authentication required"
+                                        }
+                                    },
+                                    "Request failed with invalid user on /tweets/:tweetId": {
+                                        "value": {
+                                            "Error": "Forbidden action"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The tweet was not found in the database",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Request failed on /tweets/:tweetId": {
+                                        "value": {
+                                            "Error": "Tweet not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Unexpected error comming from application basic process",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/errorMessage"
+                                },
+                                "examples": {
+                                    "Error from application": {
+                                        "value": {
+                                            "Error": "some unexpected error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        },
+        "schemas": {
+            "foreignUser": {
+                "type": "object",
+                "properties": {
+                    "pseudo": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    }
+                },
+                "required": ["pseudo", "password", "firstName", "lastName"]
+            },
+            "userLogin": {
+                "type": "object",
+                "properties": {
+                    "pseudo": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": ["pseudo", "password"]
+            },
+            "loggedUser": {
+                "type": "object",
+                "properties": {
+                    "pseudo": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "token": {
+                        "type": "string"
+                    }
+                },
+                "required": ["pseudo", "password", "firstName", "lastName", "id", "token"]
+            },
+            "user": {
+                "type": "object",
+                "properties": {
+                    "pseudo": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "string"
+                    },
+                    "tweets": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "schemas": {
+                                    "$ref": "#/components/schemas/tweet"
+                                }
+                            }
+                        }
+                    }
+                },
+                "required": ["pseudo", "password", "firstName", "lastName", "id"]
+            },
+            "userPassword": {
+                "type": "object",
+                "properties": {
+                    "oldPass": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                },
+                "required": ["oldpass, password"]
+            },
+            "responseMessage": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                },
+                "required": ["message"]
+            },
+            "errorMessage": {
+                "type": "object",
+                "properties": {
+                    "Error": {
+                        "type": "string"
+                    }
+                },
+                "required": ["Error"]
+            },
+            "tweet": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "schema": {
+                                "$ref": "#/components/schemas/user"
+                            }
+                        }
+                    }
+                },
+                "required": ["id", "content", "date"]
+            },
+            "tweetContent": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    }
+                },
+                "required": ["content"]
+            },
+            "tweetArray": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "schema": {
+                            "$ref": "#/components/schemas/tweet"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

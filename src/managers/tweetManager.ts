@@ -20,7 +20,7 @@ export async function getOne(id: string): Promise<Tweet> {
     const tweetRepo = getRepository(Tweet);
     const tweet = await tweetRepo.findOne(id);
     if (!tweet) {
-        throw new ApiError("Tweet not found", 404);
+        throw new ApiError("Error", "Tweet not found", 404);
     }
     return tweet;
 }
@@ -40,13 +40,10 @@ export async function removeTweet(tweet: Tweet): Promise<void> {
 }
 
 export async function checkUserTweet(tweetId: string, userId: string): Promise<void> {
-    const user = await findUser("id", userId, true);
-    if (!user) {
-        throw new ApiError("User not found", 404);
-    }
+    const user = await findUser({ key: "id", value: userId, relations: true });
     const valid = user.tweets.find((tweet) => tweet.id === tweetId);
     if (!valid) {
-        throw new ApiError("Forbidden action", 403);
+        throw new ApiError("Error", "Forbidden action", 403);
     }
     return;
 }
@@ -59,8 +56,8 @@ export function encodeTweetContent(tweet: Tweet): Tweet {
 export function decodeTweet(tweet: Tweet): Tweet {
     tweet.content = decodeURI(tweet.content);
     tweet.user = {
-        ...tweet.user,
         pseudo: decodeURI(tweet.user.pseudo),
+        id: tweet.user.id,
     } as User;
     return tweet;
 }

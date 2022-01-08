@@ -4,3 +4,4 @@ src/logger/**.log
 dist/
 coverage/
 .husky/
+http/
