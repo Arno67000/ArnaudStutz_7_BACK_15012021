@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { findUser } from "../managers/userManager";
 import { Tweet } from "../entity/Tweet";
 import {
     getAll,
@@ -15,7 +16,7 @@ export async function getAllTweets(req: Request, res: Response): Promise<Respons
     try {
         //Token verification
         if (!req.body.allowedUser) {
-            return res.status(403).json({ error: "Authentication required" });
+            return res.status(403).json({ Error: "Authentication required" });
         }
         const allTweets = await getAll();
         return res.status(200).json(allTweets);
@@ -28,24 +29,32 @@ export async function postTweet(req: Request, res: Response): Promise<Response> 
     try {
         //Token verification
         if (req.body.user.id !== req.body.allowedUser.id) {
-            return res.status(403).json({ error: "Authentication required" });
+            return res.status(403).json({ Error: "Authentication required" });
         }
+        const user = await findUser({ key: "id", value: req.body.user.id, relations: false, encoded: false });
         let tweet = new Tweet();
         tweet = encodeTweetContent(req.body);
+        tweet.user = user;
         const createdTweet = await saveTweet(tweet);
         return res.status(201).json(decodeTweet(createdTweet));
     } catch (error) {
+        if (error instanceof ApiError) {
+            return res.status(error.code).json({ Error: error.message });
+        }
         return res.status(500).json({ Error: error });
     }
 }
 
 export async function deleteTweet(req: Request, res: Response): Promise<Response> {
     try {
-        if (!req.body.user.id === req.body.allowedUser.id) {
-            return res.status(403).json({ error: "Authentication required" });
+        if (
+            !req.body.allowedUser ||
+            (req.body.allowedUser.id !== req.body.user.id && req.body.allowedUser.role !== "Admin")
+        ) {
+            return res.status(403).json({ Error: "Authentication required" });
         }
         const tweet = await getOne(req.params.tweetId);
-        if (req.body.allowedUser.role === "User") {
+        if (req.body.allowedUser.role !== "Admin") {
             await checkUserTweet(req.body.user.id, req.params.tweetId);
         }
         await removeTweet(tweet);
@@ -60,11 +69,14 @@ export async function deleteTweet(req: Request, res: Response): Promise<Response
 
 export async function modifyTweet(req: Request, res: Response): Promise<Response> {
     try {
-        if (!req.body.allowedUser) {
-            return res.status(403).json({ error: "Authentication required" });
+        if (
+            !req.body.allowedUser ||
+            (req.body.allowedUser.id !== req.body.user.id && req.body.allowedUser.role !== "Admin")
+        ) {
+            return res.status(403).json({ Error: "Authentication required" });
         }
         const tweet = await getOne(req.params.tweetId);
-        if (req.body.allowedUser.id === req.body.user.id) {
+        if (req.body.allowedUser.role !== "Admin") {
             await checkUserTweet(req.body.user.id, req.params.tweetId);
         }
         tweet.content = encodeURI(req.body.content);

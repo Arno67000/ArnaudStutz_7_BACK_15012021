@@ -2,8 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import * as jwebtkn from "jsonwebtoken";
 import { logger } from "../logger/winstonConfig";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 export function authenticate(req: Request, res: Response, next: NextFunction): Response | void {
-    const jwtSecret = process.env.SECRET ?? "";
+    const jwtSecret = process.env.SECRET as string;
     try {
         const token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : undefined;
         const checkedToken = token ? jwebtkn.verify(token, jwtSecret) : token;
