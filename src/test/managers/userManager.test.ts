@@ -221,7 +221,7 @@ describe("decodeUser", () => {
 });
 
 describe("encodeUser", () => {
-    test("encoding an admin should set his role as Moderateur", async () => {
+    test("encoding an admin should set his role as Admin", async () => {
         const admin = {
             pseudo: "admin",
             password: "Adm1n_Pass",
@@ -229,6 +229,6 @@ describe("encodeUser", () => {
             lastName: "Min",
         } as User;
         const encoded = await encodeUser(admin);
-        expect(encoded.role).toEqual("Moderateur");
+        expect(encoded.role).toEqual("Admin");
     });
 });
