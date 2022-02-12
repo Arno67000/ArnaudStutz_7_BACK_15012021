@@ -103,7 +103,7 @@ export async function encodeUser(user: User): Promise<Partial<User>> {
         lastName: Buffer.from(user.lastName, "binary").toString("base64"),
         pseudo: encodeURI(user.pseudo),
         password: hash,
-        role: user.pseudo === "admin" ? "Moderateur" : "User",
+        role: user.pseudo === "admin" ? "Admin" : "User",
     };
 }
 

@@ -36,7 +36,7 @@ export async function deleteUser(req: Request, res: Response): Promise<Response>
     try {
         //Comparing token id and user id
         if (!req.body.allowedUser || req.params.userId !== req.body.allowedUser.id) {
-            return res.status(403).json({ error: "Authentication required" });
+            return res.status(403).json({ Error: "Authentication required" });
         }
         const user = await findUser({ key: "id", value: req.params.userId, relations: false });
         await removeUser(user);
@@ -53,7 +53,7 @@ export async function getCurrentUser(req: Request, res: Response): Promise<Respo
     try {
         //Confirm token validation
         if (!req.body.allowedUser) {
-            return res.status(403).json({ error: "Authentication required" });
+            return res.status(403).json({ Error: "Authentication required" });
         }
         const user = await findUser({ key: "id", value: req.body.allowedUser.id, relations: false });
         const decodedUser = decodeUser(user);
@@ -70,7 +70,7 @@ export async function modifyUsersPass(req: Request, res: Response): Promise<Resp
     try {
         //Comparing token id and user id
         if (!req.body.allowedUser || req.params.userId !== req.body.allowedUser.id) {
-            return res.status(403).json({ error: "Authentication required" });
+            return res.status(403).json({ Error: "Authentication required" });
         }
         let user = await checkUser(req.body.oldPass, "id", req.params.userId);
         user = decodeUser(user) as User;
