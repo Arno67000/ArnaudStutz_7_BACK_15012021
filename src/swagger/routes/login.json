@@ -1,0 +1,95 @@
+{
+    "post": {
+        "summary": "LOG IN user",
+        "description": "This route is used to log the user in the application.",
+        "tags": ["Users"],
+        "operationId": "log",
+        "parameters": [],
+        "requestBody": {
+            "description": "An object containing the pseudo and password to log the user.",
+            "required": true,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "../schemas/userLogin.json"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "200": {
+                "description": "You'll access the main page of the app with a token set.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "../schemas/loggedUser.json"
+                        },
+                        "examples": {
+                            "Valid request on /user/login": {
+                                "value": {
+                                    "pseudo": "chosenPseudo",
+                                    "firstName": "yourFirstName",
+                                    "lastName": "yourFamilyName",
+                                    "role": "user",
+                                    "id": "0a06fce0-c4dd-4c0c-a59a-d986018y48t445z",
+                                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjBhMDZmY2UwLWM0ZGQtNGMwYy1hNTlhLWQ5ODYwMTgzYjk0MiIsInJvbGUiOiJNb2RlcmF0ZXVyIiwiaWF0IjoxNjM4NTUyNTE4LCJleHAiOjE2Mzg2Mzg5MTh9.FgretL69tFmyOyXuz0nQ5jYcGLLkcGi5nxGFa6HHLAE"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "500": {
+                "description": "Unexpected error comming from application basic process",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "../schemas/errorMessage.json"
+                        },
+                        "examples": {
+                            "Error from application": {
+                                "value": {
+                                    "Error": "some unexpected error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "403": {
+                "description": "The provided credentials are wrong",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "../schemas/errorMessage.json"
+                        },
+                        "examples": {
+                            "Request failed on /user/login": {
+                                "value": {
+                                    "Error": "Wrong credentials"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "404": {
+                "description": "The provided pseudo is not in database, you may have to signup first",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "../schemas/errorMessage.json"
+                        },
+                        "examples": {
+                            "Request failed on /user/login": {
+                                "value": {
+                                    "Error": "User not found"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

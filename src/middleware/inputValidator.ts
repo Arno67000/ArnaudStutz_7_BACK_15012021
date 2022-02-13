@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import { check, validationResult } from "express-validator";
+import { check, ValidationChain, validationResult, param } from "express-validator";
 
-export function userValidationRules() {
+export function userValidationRules(): ValidationChain[] {
     return [
         check("pseudo")
             .isString()
             .trim()
             .isLength({ min: 3, max: 12 })
-            .withMessage("Le pseudo doit contenir entre 3 et 12 caractères, et aucun des caractères spéciaux"),
+            .withMessage("Pseudo must contain between 3 and 12 characters, and none of the special characters"),
         check("password")
             .isStrongPassword({
                 minLength: 8,
@@ -25,26 +25,34 @@ export function userValidationRules() {
             })
             .withMessage({
                 message:
-                    "Le mot de passe doit contenir 8 caractères dont: 1 Majuscule, 1 minuscule, 1 chiffre ET un symbole",
+                    "Password must contain 8 characters including: 1 uppercase, 1 lowercase, 1 number AND a symbol",
             }),
     ];
 }
 
-export function inputValidationRules() {
+export function inputValidationRules(): ValidationChain[] {
     return [
         check("content")
             .isString()
             .trim()
             .isLength({ min: 4, max: 250 })
-            .withMessage("Le message peut contenir de 4 à 250 caractères."),
+            .withMessage("Message must contain between 4 and 250 characters."),
     ];
 }
 
-export function validate(req: Request, res: Response, next: NextFunction) {
+export function tweetParamsValidationChain(): ValidationChain[] {
+    return [param("tweetId").exists().isString()];
+}
+
+export function userParamsValidationChain(): ValidationChain[] {
+    return [param("userId").exists().isString()];
+}
+
+export function validate(req: Request, res: Response, next: NextFunction): void {
     const errors = validationResult(req);
     if (errors.isEmpty()) {
-        return next();
+        next();
     } else {
-        return res.status(400).json({ errors });
+        res.status(406).json({ errors });
     }
 }

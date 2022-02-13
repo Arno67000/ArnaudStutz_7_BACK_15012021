@@ -1,20 +1,23 @@
 {
     "compilerOptions": {
         "sourceMap": true,
-        "target": "ES6",
-        "module": "CommonJS",
-        "outDir": "dist",
+        "target": "es6",
+        "module": "commonjs",
+        "rootDir": "./",
+        "outDir": "build",
         "esModuleInterop": true,
         "strict": true,
+        "useUnknownInCatchVariables": false,
+        "strictPropertyInitialization": false,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "strictPropertyInitialization": false,
+        "resolveJsonModule": true,
         "baseUrl": "./",
         "paths": {
             "test/*": ["test/*"]
         }
     },
-    "include": ["src/**/*.ts"],
-    "exclude": ["src/**/*.test.ts"],
+    "include": ["src/**/*"],
+    "exclude": ["src/**/*.test.ts", "src/test"],
     "types": ["reflect-metadata"]
 }
