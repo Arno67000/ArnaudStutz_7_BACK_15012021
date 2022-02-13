@@ -1,9 +1,10 @@
 {
     "compilerOptions": {
+        "sourceMap": true,
         "target": "es6",
         "module": "commonjs",
         "rootDir": "./",
-        "outDir": "./dist",
+        "outDir": "build",
         "esModuleInterop": true,
         "strict": true,
         "useUnknownInCatchVariables": false,
@@ -17,27 +18,6 @@
         }
     },
     "include": ["src/**/*"],
-    "exclude": ["src/**/*.test.ts"],
+    "exclude": ["src/**/*.test.ts", "src/test"],
     "types": ["reflect-metadata"]
 }
-
-// {
-//     "compilerOptions": {
-//         "sourceMap": true,
-//         "target": "ES6",
-//         "module": "CommonJS",
-//         "outDir": "dist",
-//         "esModuleInterop": true,
-//         "strict": true,
-//         "emitDecoratorMetadata": true,
-//         "experimentalDecorators": true,
-//         "strictPropertyInitialization": false,
-//         "baseUrl": "./",
-//         "paths": {
-//             "test/*": ["test/*"]
-//         }
-//     },
-//     "include": ["src/**/*.ts"],
-//     "exclude": ["src/**/*.test.ts"],
-//     "types": ["reflect-metadata"]
-// }
