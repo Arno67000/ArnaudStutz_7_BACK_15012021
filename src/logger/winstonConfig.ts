@@ -1,9 +1,13 @@
 import * as winston from "winston";
 import path = require("path");
 
+export function level(): string {
+    return process.env.NODE_ENV !== "production" ? "info" : "error";
+}
+
 const options = {
     file: {
-        level: "info",
+        level: level(),
         filename: path.join(__dirname, "app.log"),
         handleExceptions: true,
         json: true,
@@ -19,9 +23,9 @@ const options = {
 };
 
 const colors = {
-    info: "blue",
     error: "red",
     warn: "orange",
+    info: "blue",
 };
 
 export const logger = winston.createLogger({
