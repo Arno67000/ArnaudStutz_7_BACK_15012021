@@ -31,7 +31,7 @@ In the `.env` file, replace the `****` fields with the required informations (Da
 
 ## **START** _(production mode)_
 
--   Run `yarn build` to transpile the typescript (.ts) files to javascript (.js) in a `dist/` directory.
+-   Run `yarn build` to transpile the typescript (.ts) files to javascript (.js) in a `build/` directory.
 -   Make sure you have the right line related to typeOrm entities for production.
 -   Run `yarn start` to start the server and wait for the console to show : <br /> `Connected to [TYPEORM_DATABASE] DB on port: [TYPEORM_PORT]` <br /> `Server running on port: [APP_PORT]`.
 
@@ -60,7 +60,7 @@ this command runs `yarn swagger:bundle` (to generate the swagger.json file), `ya
 To always maintain the quality and formatting of the code, I choose to set up several tools :
 
 -   Prettier and ESlint to format the code and save all files in crlf to prevent merging troubles while working alternatively on Linux and Windows
--   husky : to setup several hooks on pre-commit and pre-push to help maintain automatically the quality of the code running Prettier and ESlint before commiting on running `git commit` and running `yarn test` (to make sure all tests are passing) and `yarn build` before pushing to github on running a `git push`.
+-   husky : to setup several hooks on pre-commit and pre-push to help maintain automatically the quality of the code. Husky will run Prettier and ESlint before commiting on a `git commit`, and run `yarn test` (to make sure all tests are passing) and `yarn build` before pushing to github on a `git push`.
 
 Running `yarn husky:setup` will setup these hooks once and for all.
 

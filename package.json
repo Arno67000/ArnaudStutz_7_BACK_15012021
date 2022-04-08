@@ -11,13 +11,13 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "prettier": "prettier --check **/*.{ts,json}",
     "prettier:fix": "prettier --write **/*.{ts,json}",
-    "start": "node build/src/server.js",
+    "start": "set NODE_ENV=production&& node build/src/server.js",
     "swagger:gen": "npx swagger-typescript-api -p ./src/swagger/swagger.json -o ./src/swagger/api -t ./src/swagger/templates/modular --modular",
     "swagger:bundle": "npx swagger-cli bundle ./src/swagger/baseApi.json --outfile ./src/swagger/swagger.json --type json",
     "swagger:full": "yarn swagger:bundle && yarn swagger:gen && yarn prettier:fix",
     "test": "set NODE_ENV=test&& jest --detectOpenHandles --verbose",
     "test:watch": "set NODE_ENV=test&& jest --detectOpenHandles --verbose --watch",
-    "test:coverage": "jest --detectOpenHandles --coverage --verbose"
+    "test:coverage": "set NODE_ENV=test&&jest --detectOpenHandles --coverage --verbose"
   },
   "author": "Arno67000",
   "license": "ISC",
